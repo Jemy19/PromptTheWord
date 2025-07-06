@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Send, RotateCcw, Target, Trophy, X, Youtube, Sun, Mic, ArrowUp } from "lucide-react"
 import HowToPlayModal from "./components/how-to-play-modal"
 
+
 const WORD_LIST = [
   "water",
   "fire",
@@ -45,12 +46,12 @@ const WORD_LIST = [
   "bliss",
 ]
 
-const MAX_PROMPTS = 10
+const MAX_PROMPTS = 5
 
 const TargetWordAnimated = React.memo(function TargetWordAnimated({ word }: { word: string }) {
   return (
     <TextAnimate animation="blurInUp" by="word" className="mb-6">
-      {`Target Word: ${word.toUpperCase()}`}
+      {`Secret Word: ${word.toUpperCase()}`}
     </TextAnimate>
   );
 });
@@ -147,10 +148,9 @@ export default function PromptTrapGame() {
                     max-w-[90vw] truncate
                   "
                 >
-                  Target Word: {targetWord.toUpperCase()}
+                  Secret Word: {targetWord.toUpperCase()}
                 </div>
               )}
-              {!gameStarted && <HowToPlayModal />}
             </div>
           </div>
         </div>
@@ -167,8 +167,9 @@ export default function PromptTrapGame() {
               <br />
               <span className="text-sm">+{Math.max(100 - (attempts - 1) * 10, 10)} points</span>
             </p>
+            {/* Play Again for now update to next round later */}
             <Button onClick={nextRound} className="bg-green-600 hover:bg-green-700 text-white">
-              Next Round
+              Play Again
             </Button>
           </div>
         </div>
@@ -196,7 +197,7 @@ export default function PromptTrapGame() {
       {cheatWarning && (
         <div className="max-w-2xl mx-auto mb-4 mt-16">
           <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-2 rounded text-center font-medium">
-            🚫 Do not cheat! You can't use the target word in your prompt.
+            🚫 Do not cheat! You can't use the secret word in your prompt.
           </div>
         </div>
       )}
@@ -209,7 +210,7 @@ export default function PromptTrapGame() {
             
 
             {/* Main Heading */}
-            <h1 className="text-4xl font-bold text-gray-900 mb-6">Prompt the Word Guide AI to Guess the Word.</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-6">Prompt the Word: Help AI Guess the Secret Word.</h1>
             <TargetWordAnimated word={targetWord} />
             {/* Input Field */}
             <div className="max-w-3xl mx-auto mb-12">
@@ -217,7 +218,7 @@ export default function PromptTrapGame() {
                 <Input
                   value={input}
                   onChange={handleInputChange}
-                  placeholder="Describe the word without using it..."
+                  placeholder="Describe the secret word without using it..."
                   className="w-full h-16 pl-6 pr-32 text-lg border-gray-300 rounded-xl focus:border-gray-400 focus:ring-1 focus:ring-gray-400 shadow-sm"
                   disabled={isLoading || gameOver}
                 />
@@ -241,6 +242,7 @@ export default function PromptTrapGame() {
                 
                 New Word
               </ShinyButton>
+              {!gameStarted && <HowToPlayModal />}
             </div>
           </div>
         </div>
@@ -251,34 +253,40 @@ export default function PromptTrapGame() {
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
               <div className="h-full overflow-y-auto py-6">
                 <div className="space-y-8">
-                  {messages.map((message) => (
-                    <div key={message.id} className="flex gap-4">
-                      <div className="flex-shrink-0">
-                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                          <span className="text-sm font-medium text-gray-600">
-                            {message.role === "user" ? "U" : "AI"}
-                          </span>
+                  {messages.map((message) => {
+                    const isUser = message.role === "user";
+                    return (
+                      <div
+                        key={message.id}
+                        className={`flex gap-4 ${isUser ? "flex-row" : "flex-row-reverse"}`}
+                      >
+                        <div className="flex-shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                            <span className="text-sm font-medium text-gray-600">
+                              {isUser ? "U" : "AI"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className={`flex items-center gap-2 mb-2 ${isUser ? "justify-start" : "justify-end"}`}>
+                            <span className="text-sm font-medium text-gray-900">
+                              {isUser ? "You" : "PTW AI"}
+                            </span>
+                          </div>
+                          <div className={`text-gray-900 leading-relaxed ${isUser ? "text-left" : "text-right"}`}>
+                            {message.content}
+                            {message.role === "assistant" &&
+                              message.content.toLowerCase().includes(targetWord.toLowerCase()) && (
+                                <div className="mt-3 p-3 bg-green-100 border border-green-200 rounded text-sm text-green-800">
+                                  <Target className="w-4 h-4 inline mr-2" />
+                                  Secret word detected! You mastered the prompt!
+                                </div>
+                              )}
+                          </div>
                         </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-sm font-medium text-gray-900">
-                            {message.role === "user" ? "You" : "PROMPT MASTER AI"}
-                          </span>
-                        </div>
-                        <div className="text-gray-900 leading-relaxed">
-                          {message.content}
-                          {message.role === "assistant" &&
-                            message.content.toLowerCase().includes(targetWord.toLowerCase()) && (
-                              <div className="mt-3 p-3 bg-green-100 border border-green-200 rounded text-sm text-green-800">
-                                <Target className="w-4 h-4 inline mr-2" />
-                                Target word detected! You mastered the prompt!
-                              </div>
-                            )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   {isLoading && (
                     <div className="flex gap-4">
                       <div className="flex-shrink-0">
@@ -306,14 +314,11 @@ export default function PromptTrapGame() {
                 <Input
                   value={input}
                   onChange={handleInputChange}
-                  placeholder={gameOver ? "Game Over" : "Message Prompt Master"}
+                  placeholder={gameOver ? "Game Over" : "Describe the secret word without using it..."}
                   className="w-full h-12 pl-4 pr-16 text-base border-gray-300 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                   disabled={isLoading || gameOver}
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                  <Button type="button" variant="ghost" size="sm" className="p-2 h-8 w-8">
-                    <Mic className="w-4 h-4 text-gray-500" />
-                  </Button>
                   <Button
                     type="submit"
                     disabled={isLoading || !input.trim() || gameOver}
@@ -356,21 +361,20 @@ export default function PromptTrapGame() {
         <footer className="bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-500">Follow us on</span>
                 <div className="flex items-center space-x-2">
-                  <Button variant="ghost" size="sm" className="p-1 h-6 w-6">
-                    <X className="w-4 h-4 text-gray-400" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="p-1 h-6 w-6">
-                    <Youtube className="w-4 h-4 text-gray-400" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="p-1 h-6 w-6">
-                    <Sun className="w-4 h-4 text-gray-400" />
-                  </Button>
+                  <span className="text-sm text-gray-500">
+                  Created by{" "}
+                  <a
+                    href="https://ajbg.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 hover:underline"
+                  >
+                    Jeremy Gellido
+                  </a>
+                  </span>
                 </div>
-              </div>
-              <div className="text-sm text-gray-500">By using Prompt Master you agree to the Terms and Privacy.</div>
+              <div className="text-sm text-gray-500">By using Prompt The Word you agree to the Terms and Privacy.</div>
             </div>
           </div>
         </footer>

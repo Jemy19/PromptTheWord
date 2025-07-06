@@ -3,24 +3,24 @@
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Target, MessageCircle, Lightbulb, Users, HelpCircle, Trophy } from "lucide-react"
-
+import { RainbowButton } from "@/components/magicui/rainbow-button";
+import { ShinyButton } from "@/components/magicui/shiny-button";
 export default function HowToPlayModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 bg-white border border-gray-300">
-          <HelpCircle  className="w-4 h-4 mr-2" />
+        <RainbowButton>
           How to Play
-        </Button>
+        </RainbowButton>
       </DialogTrigger>
       <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-gray-900">How to Play Prompt Master</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-gray-900">How to Play Prompt The Word</DialogTitle>
         </DialogHeader>
         <div className="space-y-6">
           <div className="text-gray-600">
-            You are given a secret target word (e.g., "water"). Your task is to prompt the AI in a way that it naturally
-            says the target word in its response — without giving the word directly or making it too obvious.
+            You are given a secret secret word (e.g., "water"). Your task is to prompt the AI in a way that it naturally
+            says the secret word in its response — without giving the word directly or making it too obvious.
           </div>
 
           <div className="bg-blue-50 rounded-lg p-6">
@@ -29,7 +29,7 @@ export default function HowToPlayModal() {
             </h3>
             <div className="space-y-2 text-sm">
               <p>
-                <strong>Target word:</strong> Water
+                <strong>Secret word:</strong> Water
               </p>
               <p>
                 <strong>User prompt:</strong> "What do most people drink when they wake up in the morning?"
@@ -50,7 +50,7 @@ export default function HowToPlayModal() {
                   <div className="font-medium text-gray-900">Basic Rules</div>
                 </div>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• A target word is chosen (secretly shown to the human player).</li>
+                  <li>• A Secret word is chosen (secretly shown to the human player).</li>
                   <li>• The player writes a prompt to the AI.</li>
                   <li>• If the AI's first response includes the word, the player wins that round.</li>
                   <li>• Set a max number of prompts or add scoring based on difficulty (common vs rare words).</li>
