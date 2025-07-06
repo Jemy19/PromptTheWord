@@ -7,7 +7,6 @@ import { useState, useEffect } from "react"
 import { useChat } from "ai/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { Send, RotateCcw, Target, Trophy, X, Youtube, Sun, Mic, ArrowUp } from "lucide-react"
 import HowToPlayModal from "./components/how-to-play-modal"
 
@@ -63,6 +62,7 @@ export default function PromptTrapGame() {
   const [gameWon, setGameWon] = useState(false)
   const [gameLost, setGameLost] = useState(false)
   const [attempts, setAttempts] = useState(0)
+  const [cheatWarning, setCheatWarning] = useState(false);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
     api: "/api/chat",
@@ -117,6 +117,13 @@ export default function PromptTrapGame() {
       e.preventDefault()
       return
     }
+    // Check for cheating
+    if (input.toLowerCase().includes(targetWord.toLowerCase())) {
+      e.preventDefault()
+      setCheatWarning(true)
+      return
+    }
+    setCheatWarning(false)
     handleSubmit(e)
   }
 
@@ -132,9 +139,9 @@ export default function PromptTrapGame() {
                 <div
                   className="
                     absolute left-1/2 top-full mt-2 w-max
-                    -translate-x-1/2 sm:static sm:mt-0 sm:translate-x-0
-                    text-base sm:text-lg font-medium text-gray-900
-                    bg-white sm:bg-transparent px-3 py-1 rounded sm:rounded-none shadow sm:shadow-none
+                    -translate-x-1/2
+                    text-base font-medium text-gray-900
+                    bg-white px-3 py-1 rounded shadow
                     z-10
                     text-center
                     max-w-[90vw] truncate
@@ -181,6 +188,15 @@ export default function PromptTrapGame() {
             <Button onClick={nextRound} className="bg-red-600 hover:bg-red-700 text-white">
               Try Again
             </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Show warning if user tries to cheat */}
+      {cheatWarning && (
+        <div className="max-w-2xl mx-auto mb-4 mt-16">
+          <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-2 rounded text-center font-medium">
+            🚫 Do not cheat! You can't use the target word in your prompt.
           </div>
         </div>
       )}
