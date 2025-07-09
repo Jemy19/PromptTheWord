@@ -134,8 +134,25 @@ export default function PromptTrapGame() {
       <header className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 relative">
-            <div className="text-xl font-semibold text-gray-900">PROMPT THE WORD</div>
-            <div className="flex items-center space-x-3">
+            
+            {/* Left side (optional, blank to center logo) */}
+            <div className="w-1/3" />
+
+            {/* Center logo (only when gameStarted is true) */}
+            {gameStarted && (
+              <div className="w-1/3 flex justify-center">
+                <a href="/"> {/* Added anchor tag with href */}
+                  <img
+                    src="/PWTNOBGV1.png"
+                    alt="Logo"
+                    className="h-[50px] sm:h-[80px] lg:h-[60px] w-auto pointer-events-none select-none"
+                  />
+                </a>
+              </div>
+            )}
+
+            {/* Right side (Secret Word) */}
+            <div className="w-1/3 flex justify-end">
               {gameStarted && (
                 <div
                   className="
@@ -155,6 +172,7 @@ export default function PromptTrapGame() {
           </div>
         </div>
       </header>
+
 
       {/* Game Won Banner */}
       {gameWon && (
@@ -204,16 +222,21 @@ export default function PromptTrapGame() {
 
       {!gameStarted ? (
         /* Initial State - Clean Layout */
-        <div className="flex-1 flex flex-col justify-center">
+        <div className="flex-1 flex flex-col justify-center -mt-40">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
-            {/* Blue Badge */}
-            
-
+            {/* Logo */}
+            <div className="mb-1">
+              <img
+                src="/PWTNOBGV1.png"
+                alt="Logo"
+                className="w-auto h-[100px] sm:h-[130px] lg:h-[130px] mx-auto pointer-events-none select-none"
+              />
+            </div>
             {/* Main Heading */}
-            <h1 className="text-4xl font-bold text-gray-900 mb-6">Prompt the Word: Help AI Guess the Secret Word.</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-6">Help AI Guess the Secret Word.</h1>
             <TargetWordAnimated word={targetWord} />
             {/* Input Field */}
-            <div className="max-w-3xl mx-auto mb-12">
+            <div className="max-w-3xl mx-auto mb-6">
               <form onSubmit={customHandleSubmit} className="relative">
                 <Input
                   value={input}
@@ -288,14 +311,14 @@ export default function PromptTrapGame() {
                     );
                   })}
                   {isLoading && (
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 flex-row-reverse"> {/* Changed flex-row to flex-row-reverse here */}
                       <div className="flex-shrink-0">
                         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
                           <span className="text-sm font-medium text-gray-600">AI</span>
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center text-gray-500">
+                        <div className="flex items-center text-gray-500 justify-end"> {/* Added justify-end here */}
                           <div className="animate-pulse w-2 h-2 bg-gray-400 rounded-full mr-3"></div>
                           <span className="text-sm">AI is responding...</span>
                         </div>
@@ -358,24 +381,34 @@ export default function PromptTrapGame() {
 
       {/* Footer - Only show when not in game mode */}
       {!gameStarted && (
-        <footer className="bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-500">
-                  Created by{" "}
-                  <a
-                    href="https://ajbg.vercel.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-700 hover:underline"
-                  >
-                    Jeremy Gellido
-                  </a>
-                  </span>
-                </div>
-              <div className="text-sm text-gray-500">By using Prompt The Word you agree to the Terms and Privacy.</div>
+        <footer className="fixed bottom-0 left-0 w-full bg-white z-10 border-t border-gray-200">
+          <div className="grid grid-cols-3 items-center w-full px-4 sm:px-6 lg:px-8 py-3">
+            
+            {/* Column 1: Far Left */}
+            <div className="text-xs text-gray-500 text-left">
+              Created by{" "}
+              <a
+                href="https://ajbg.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-gray-700 hover:underline"
+              >
+                Jeremy Gellido
+              </a>
             </div>
+
+            {/* Column 2: Center */}
+            <div className="text-xs text-gray-500 text-center">
+              By using Prompt The Word you agree to the{" "}
+              <a href="#" className="font-medium hover:underline text-gray-700">Terms</a> and{" "}
+              <a href="#" className="font-medium hover:underline text-gray-700">Privacy</a>.
+            </div>
+
+            {/* Column 3: Far Right (This is empty but ensures the center column is perfectly centered) */}
+            <div className="text-right">
+              {/* You could add content here if needed */}
+            </div>
+            
           </div>
         </footer>
       )}
