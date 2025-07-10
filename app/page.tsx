@@ -285,7 +285,7 @@ export default function PromptTrapGame() {
         <>
           <div className="flex-1 overflow-hidden max-h-[calc(100vh-160px)]">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-              <div className="h-full overflow-y-auto py-6">
+              <div className="h-full overflow-y-auto py-6 bg-32">
                 <div className="space-y-8">
                   {messages.map((message) => {
                     const isUser = message.role === "user";
@@ -343,8 +343,8 @@ export default function PromptTrapGame() {
           </div>
 
           {/* Bottom Input Area */}
-          <div className="border-t border-gray-200 bg-white">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="fixed bottom-0 left-0 w-full border-t border-gray-200 bg-white z-10">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
               <form onSubmit={customHandleSubmit} className="relative mb-4">
                 <Input
                   value={input}
