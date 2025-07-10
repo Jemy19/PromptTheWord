@@ -65,9 +65,8 @@ export default function HowToPlayModal() {
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>• Fewer attempts = Higher score</li>
                   <li>• First attempt: 100 points</li>
-                  <li>• Each additional attempt: -10 points</li>
-                  <li>• Minimum score per round: 10 points</li>
-                  <li>• Optional: Scoring based on word difficulty (common vs rare words)</li>
+                  <li>• Each additional attempt: -20 points</li>
+                  <li>• Minimum score per round: 20 points</li>
                 </ul>
               </div>
             </div>

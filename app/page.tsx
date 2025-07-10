@@ -65,6 +65,8 @@ export default function PromptTrapGame() {
   const [attempts, setAttempts] = useState(0)
   const [cheatWarning, setCheatWarning] = useState(false);
 
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
     api: "/api/chat",
     onFinish: (message) => {
@@ -75,7 +77,7 @@ export default function PromptTrapGame() {
 
       if (aiResponse.includes(targetLower)) {
         setGameWon(true)
-        const points = Math.max(100 - (newAttempts - 1) * 10, 10)
+        const points = Math.max(100 - (newAttempts - 1) * 20, 10)
         setScore((prev) => prev + points)
       } else if (newAttempts >= MAX_PROMPTS) {
         setGameLost(true)
@@ -102,6 +104,13 @@ export default function PromptTrapGame() {
     setRound(1)
     generateNewWord()
   }
+
+  useEffect(() => {
+  if (messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+  }, [messages]);
+
 
   useEffect(() => {
     generateNewWord()
@@ -145,7 +154,7 @@ export default function PromptTrapGame() {
                   <img
                     src="/PWTNOBGV1.png"
                     alt="Logo"
-                    className="h-[50px] sm:h-[80px] lg:h-[60px] w-auto pointer-events-none select-none"
+                    className="h-[40px] sm:h-[80px] lg:h-[60px] w-auto pointer-events-none select-none"
                   />
                 </a>
               </div>
@@ -183,7 +192,7 @@ export default function PromptTrapGame() {
             <p className="text-green-700 mb-4">
               You mastered the prompt! AI said "{targetWord}" in {attempts} attempts
               <br />
-              <span className="text-sm">+{Math.max(100 - (attempts - 1) * 10, 10)} points</span>
+              <span className="text-sm">+{Math.max(100 - (attempts - 1) * 20, 10)} points</span>
             </p>
             {/* Play Again for now update to next round later */}
             <Button onClick={nextRound} className="bg-green-600 hover:bg-green-700 text-white">
@@ -222,39 +231,41 @@ export default function PromptTrapGame() {
 
       {!gameStarted ? (
         /* Initial State - Clean Layout */
-        <div className="flex-1 flex flex-col justify-center -mt-40">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
-            {/* Logo */}
-            <div className="mb-1">
-              <img
-                src="/PWTNOBGV1.png"
-                alt="Logo"
-                className="w-auto h-[100px] sm:h-[130px] lg:h-[130px] mx-auto pointer-events-none select-none"
-              />
-            </div>
-            {/* Main Heading */}
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Help AI Guess the Secret Word.</h1>
-            <TargetWordAnimated word={targetWord} />
-            {/* Input Field */}
-            <div className="max-w-3xl mx-auto mb-6">
-              <form onSubmit={customHandleSubmit} className="relative">
-                <Input
-                  value={input}
-                  onChange={handleInputChange}
-                  placeholder="Describe the secret word without using it..."
-                  className="w-full h-16 pl-6 pr-32 text-lg border-gray-300 rounded-xl focus:border-gray-400 focus:ring-1 focus:ring-gray-400 shadow-sm"
-                  disabled={isLoading || gameOver}
+        <div className="flex-1 flex flex-col justify-center relative">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[70%] w-full">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+              {/* Logo */}
+              <div className="mb-1">
+                <img
+                  src="/PWTNOBGV1.png"
+                  alt="Logo"
+                  className="w-auto h-[100px] sm:h-[130px] lg:h-[130px] mx-auto pointer-events-none select-none"
                 />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                  <Button
-                    type="submit"
-                    disabled={isLoading || !input.trim() || gameOver}
-                    className="h-8 w-8 p-0 bg-gray-900 hover:bg-gray-800 rounded-full"
-                  >
-                    <ArrowUp className="w-4 h-4" />
-                  </Button>
-                </div>
-              </form>
+              </div>
+              {/* Main Heading */}
+              <h1 className="text-2xl font-bold text-gray-900 mb-6">Help AI Guess the Secret Word.</h1>
+              <TargetWordAnimated word={targetWord} />
+              {/* Input Field */}
+              <div className="max-w-3xl mx-auto mb-6">
+                <form onSubmit={customHandleSubmit} className="relative">
+                  <Input
+                    value={input}
+                    onChange={handleInputChange}
+                    placeholder="Describe the secret word without using it..."
+                    className="w-full h-16 pl-6 pr-32 text-lg border-gray-300 rounded-xl focus:border-gray-400 focus:ring-1 focus:ring-gray-400 shadow-sm"
+                    disabled={isLoading || gameOver}
+                  />
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                    <Button
+                      type="submit"
+                      disabled={isLoading || !input.trim() || gameOver}
+                      className="h-8 w-8 p-0 bg-gray-900 hover:bg-gray-800 rounded-full"
+                    >
+                      <ArrowUp className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </form>
+              </div>
             </div>
 
             {/* Stats */}
@@ -272,7 +283,7 @@ export default function PromptTrapGame() {
       ) : (
         /* Game Started - Chat Layout */
         <>
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-hidden max-h-[calc(100vh-160px)]">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
               <div className="h-full overflow-y-auto py-6">
                 <div className="space-y-8">
@@ -310,6 +321,7 @@ export default function PromptTrapGame() {
                       </div>
                     );
                   })}
+                  <div ref={messagesEndRef} />
                   {isLoading && (
                     <div className="flex gap-4 flex-row-reverse"> {/* Changed flex-row to flex-row-reverse here */}
                       <div className="flex-shrink-0">
