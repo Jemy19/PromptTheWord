@@ -1,12 +1,12 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from "react"
-import { TextAnimate } from "@/components/magicui/text-animate";
-import { ShinyButton } from "@/components/magicui/shiny-button";
+import { TextAnimate } from "@/components/magicui/text-animate"
+import { ShinyButton } from "@/components/magicui/shiny-button"
 import { useChat } from "ai/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Send, RotateCcw, Target, Trophy, X, Youtube, Sun, Mic, ArrowUp } from "lucide-react"
+import { Send, RotateCcw, Target, Trophy, ArrowUp } from "lucide-react"
 import HowToPlayModal from "./components/how-to-play-modal"
 
 
@@ -62,8 +62,7 @@ export default function PromptTrapGame() {
   const [gameWon, setGameWon] = useState(false)
   const [gameLost, setGameLost] = useState(false)
   const [attempts, setAttempts] = useState(0)
-  const [cheatWarning, setCheatWarning] = useState(false);
-
+  const [cheatWarning, setCheatWarning] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
@@ -109,14 +108,10 @@ export default function PromptTrapGame() {
   }, [])
 
   useEffect(() => {
-   // Only scroll if messages exist and the game is not yet over
-   // or if the game just became over (to scroll to the final message).
-   // This ensures that the scroll happens *after* all messages, including
-   // the last one for a loss, have been rendered.
-  if (messagesEndRef.current && messages.length > 0) {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  }
- }, [messages, gameWon, gameLost]); // Depend on messages, gameWon, and gameLost
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }, [messages, isLoading])
 
   // Check if game has started (has messages)
   const gameStarted = messages.length > 0
@@ -142,7 +137,7 @@ export default function PromptTrapGame() {
   return (
     <div className="h-screen bg-white flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="bg-white">
+      <header className="bg-white flex-shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 relative">
             
@@ -152,7 +147,7 @@ export default function PromptTrapGame() {
             {/* Center logo (only when gameStarted is true) */}
             {gameStarted && (
               <div className="w-1/3 flex justify-center">
-                <a href="/"> {/* Added anchor tag with href */}
+                <a href="/"> 
                   <img
                     src="/PWTNOBGV1.png"
                     alt="Logo"
@@ -187,7 +182,7 @@ export default function PromptTrapGame() {
 
       {/* Game Won Banner */}
       {gameWon && (
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 w-full">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 w-full flex-shrink-0">
           <div className="mt-6 p-6 bg-green-50 border border-green-200 rounded-lg text-center">
             <Trophy className="w-8 h-8 mx-auto mb-3 text-green-600" />
             <h3 className="text-lg font-medium text-green-900 mb-2">Success!</h3>
@@ -206,7 +201,7 @@ export default function PromptTrapGame() {
 
       {/* Game Lost Banner */}
       {gameLost && (
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 w-full">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 w-full flex-shrink-0">
           <div className="mt-6 p-6 bg-red-50 border border-red-200 rounded-lg text-center">
             <Target className="w-8 h-8 mx-auto mb-3 text-red-600" />
             <h3 className="text-lg font-medium text-red-900 mb-2">Game Over!</h3>
@@ -224,7 +219,7 @@ export default function PromptTrapGame() {
 
       {/* Show warning if user tries to cheat */}
       {cheatWarning && (
-        <div className="max-w-2xl mx-auto mb-4 mt-16">
+        <div className="max-w-2xl mx-auto mb-4 mt-16 flex-shrink-0">
           <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-2 rounded text-center font-medium">
             🚫 Do not cheat! You can't use the secret word in your prompt.
           </div>
@@ -234,7 +229,7 @@ export default function PromptTrapGame() {
       {!gameStarted ? (
         /* Initial State - Clean Layout */
         <div className="flex-1 flex flex-col justify-center relative">
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[70%] w-full">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[75%] w-full">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
               {/* Logo */}
               <div className="mb-1">
@@ -286,69 +281,67 @@ export default function PromptTrapGame() {
         /* Game Started - Chat Layout */
         <>
           <div className="flex-1 overflow-hidden">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-              <div className="h-full overflow-y-auto py-6">
-                <div className="h-full overflow-y-auto py-6 bg-32">
-                  <div className="space-y-8">
-                    {messages.map((message) => {
-                      const isUser = message.role === "user";
-                      return (
-                        <div
-                          key={message.id}
-                          className={`flex gap-4 ${isUser ? "flex-row" : "flex-row-reverse"}`}
-                        >
-                          <div className="flex-shrink-0">
-                            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                              <span className="text-sm font-medium text-gray-600">
-                                {isUser ? "U" : "AI"}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className={`flex items-center gap-2 mb-2 ${isUser ? "justify-start" : "justify-end"}`}>
-                              <span className="text-sm font-medium text-gray-900">
-                                {isUser ? "You" : "PTW AI"}
-                              </span>
-                            </div>
-                            <div className={`text-gray-900 leading-relaxed ${isUser ? "text-left" : "text-right"}`}>
-                              {message.content}
-                              {message.role === "assistant" &&
-                                message.content.toLowerCase().includes(targetWord.toLowerCase()) && (
-                                  <div className="mt-3 p-3 bg-green-100 border border-green-200 rounded text-sm text-green-800">
-                                    <Target className="w-4 h-4 inline mr-2" />
-                                    Secret word detected! You mastered the prompt!
-                                  </div>
-                                )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                    <div ref={messagesEndRef} />
-                    {isLoading && (
-                      <div className="flex gap-4 flex-row-reverse"> {/* Changed flex-row to flex-row-reverse here */}
+            <div className="h-full overflow-y-auto">
+              <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Added padding-bottom to account for fixed input (120px) */}
+                <div className="py-6 pb-32 space-y-8">
+                  {messages.map((message) => {
+                    const isUser = message.role === "user";
+                    return (
+                      <div
+                        key={message.id}
+                        className={`flex gap-4 ${isUser ? "flex-row" : "flex-row-reverse"}`}
+                      >
                         <div className="flex-shrink-0">
                           <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                            <span className="text-sm font-medium text-gray-600">AI</span>
+                            <span className="text-sm font-medium text-gray-600">
+                              {isUser ? "U" : "AI"}
+                            </span>
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center text-gray-500 justify-end"> {/* Added justify-end here */}
-                            <div className="animate-pulse w-2 h-2 bg-gray-400 rounded-full mr-3"></div>
-                            <span className="text-sm">AI is responding...</span>
+                          <div className={`flex items-center gap-2 mb-2 ${isUser ? "justify-start" : "justify-end"}`}>
+                            <span className="text-sm font-medium text-gray-900">
+                              {isUser ? "You" : "PTW AI"}
+                            </span>
+                          </div>
+                          <div className={`text-gray-900 leading-relaxed ${isUser ? "text-left" : "text-right"}`}>
+                            {message.content}
+                            {message.role === "assistant" &&
+                              message.content.toLowerCase().includes(targetWord.toLowerCase()) && (
+                                <div className="mt-3 p-3 bg-green-100 border border-green-200 rounded text-sm text-green-800">
+                                  <Target className="w-4 h-4 inline mr-2" />
+                                  Secret word detected! You mastered the prompt!
+                                </div>
+                              )}
                           </div>
                         </div>
                       </div>
-                    )}
-                  </div>
+                    );
+                  })}
+                  {isLoading && (
+                    <div className="flex gap-4 flex-row-reverse"> {/* Changed flex-row to flex-row-reverse here */}
+                      <div className="flex-shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                          <span className="text-sm font-medium text-gray-600">AI</span>
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center text-gray-500 justify-end"> {/* Added justify-end here */}
+                          <div className="animate-pulse w-2 h-2 bg-gray-400 rounded-full mr-3"></div>
+                          <span className="text-sm">AI is responding...</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
                 </div>
               </div>
             </div>
           </div>
-
           {/* Bottom Input Area */}
-          <div className="border-t border-gray-200 bg-white">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="fixed bottom-0 left-0 w-full bg-white z-10">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
               <form onSubmit={customHandleSubmit} className="relative mb-4">
                 <Input
                   value={input}
