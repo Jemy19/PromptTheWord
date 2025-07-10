@@ -3,8 +3,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Prompt The Word',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  description: 'prompt-based word guessing game where players try to make the AI say a hidden word one clever prompt at a time.',
 }
 
 export default function RootLayout({
