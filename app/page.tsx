@@ -6,9 +6,8 @@ import { ShinyButton } from "@/components/magicui/shiny-button"
 import { useChat } from "ai/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Send, RotateCcw, Target, Trophy, ArrowUp } from "lucide-react"
+import { Send, RotateCcw, Target, Trophy, ArrowUp, X, Info } from "lucide-react"
 import HowToPlayModal from "./components/how-to-play-modal"
-
 
 const WORD_LIST = [
   "water",
@@ -182,8 +181,8 @@ export default function PromptTrapGame() {
 
       {/* Game Won Banner */}
       {gameWon && (
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 w-full flex-shrink-0">
-          <div className="mt-6 p-6 bg-green-50 border border-green-200 rounded-lg text-center">
+        <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50 p-4">
+          <div className="p-8 bg-green-50 border border-green-200 rounded-lg text-center shadow-lg max-w-md w-full">
             <Trophy className="w-8 h-8 mx-auto mb-3 text-green-600" />
             <h3 className="text-lg font-medium text-green-900 mb-2">Success!</h3>
             <p className="text-green-700 mb-4">
@@ -201,8 +200,8 @@ export default function PromptTrapGame() {
 
       {/* Game Lost Banner */}
       {gameLost && (
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 w-full flex-shrink-0">
-          <div className="mt-6 p-6 bg-red-50 border border-red-200 rounded-lg text-center">
+        <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50 p-4">
+          <div className="p-8 bg-red-50 border border-red-200 rounded-lg text-center shadow-lg max-w-md w-full">
             <Target className="w-8 h-8 mx-auto mb-3 text-red-600" />
             <h3 className="text-lg font-medium text-red-900 mb-2">Game Over!</h3>
             <p className="text-red-700 mb-4">
@@ -218,9 +217,18 @@ export default function PromptTrapGame() {
       )}
 
       {/* Show warning if user tries to cheat */}
-      {cheatWarning && (
-        <div className="max-w-2xl mx-auto mb-4 mt-16 flex-shrink-0">
-          <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-2 rounded text-center font-medium">
+      {cheatWarning && ( /* Removed mt-16 and flex-shrink-0 from here */
+        <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50 p-4">
+          <div className="p-8 bg-yellow-50 border border-yellow-200 rounded-lg text-center shadow-lg max-w-md w-full relative">
+            <Button
+              onClick={() => setCheatWarning(false)} /* Directly set cheatWarning to false */
+              variant="ghost"
+              size="icon"
+              className="absolute top-2 right-2 text-gray-500 hover:bg-gray-100 rounded-full"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+            <Info className="w-8 h-8 mx-auto mb-3 text-yellow-600" /> {/* Added an Info icon for better visual */}
             🚫 Do not cheat! You can't use the secret word in your prompt.
           </div>
         </div>
