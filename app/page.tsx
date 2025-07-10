@@ -237,7 +237,7 @@ export default function PromptTrapGame() {
       {!gameStarted ? (
         /* Initial State - Clean Layout */
         <div className="flex-1 flex flex-col justify-center relative">
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[75%] w-full">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[75%] sm:-translate-y-[65%] w-full">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
               {/* Logo */}
               <div className="mb-1">
