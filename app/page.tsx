@@ -137,7 +137,7 @@ export default function PromptTrapGame() {
   return (
     <div className="h-screen bg-white flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="bg-white flex-shrink-0">
+      <header className="fixed w-full bg-white flex-shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 relative">
             
@@ -284,7 +284,7 @@ export default function PromptTrapGame() {
             <div className="h-full overflow-y-auto">
               <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Added padding-bottom to account for fixed input (120px) */}
-                <div className="py-6 pb-32 space-y-8">
+                <div className="py-6 pb-32 pt-32 space-y-8">
                   {messages.map((message) => {
                     const isUser = message.role === "user";
                     return (
